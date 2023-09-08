@@ -4,9 +4,9 @@
 
 - with that `trusted relation` between the `ansible host` and the `target host` we can `login` using the `automated passwordless login`
 
-- when we are using the `ssh` to connect to the `target client` from `another server` then
+- when we are using the `ssh` to connect to the `client` from `another server` then
   
-  - when we request to connect to the `server` from `client host`  for example `ubuntu-c(client)` request connection `with ubuntu1(server)` then the `ubuntu-c(client) requests an SSH session with ubuntu1(server)` where `ssh connection betwween ubuntu-c(client) to ubuntu1(server)` which will request for `ssh-session`
+  - when we request to connect to the `server` from `client host`  for example `ubuntu-c(client)` request connection `with ubuntu1(server)` then the `ubuntu-c(client) requests an SSH session with ubuntu1(server)` where `ssh connection betwween ubuntu-c(client) to ubuntu1(server)` which will `request` for `ssh-session`
 
   - both the `ubuntu-c(client) and ubuntu-1(server)` `exchange` the `SSH protocol version that they support` if the `SSH protocol version` `compatible` then they will `agree` `else connection stop at this point`
 
@@ -68,6 +68,9 @@
 
 - we now have the good understanding of `ssh connection` we now see how thats related to `ansible` to `connect and manage` to `our system` without the `use of password`
 
+
+# <ins> Password Less communication Between Ansible Host and Target Host </ins> #
+
 - ansible uses the `ssh`, hence `in order to resolve it` we need to implement this in the `ssh-layer`
 
 - when we have the `secure channel` established between the `ansible host` and the `target host` after accepting the `fingureprint` we will need to put the `password` which will securely `transfered to the target host using the secure channel securely` and once it `validated` then connection established
@@ -80,25 +83,29 @@
 
 - on the `ansible control host i.e. (ubuntu-c)` in this case we will create `2 keys` named as `public and private key which will comprise to a key-pair`
 
-- on the `target hosts or remote server (ubuntu1)` onn the `~/.ssh` folder we havbe the `authorized key` file that `allowing us to add` the `public key of our trusted host which is the ubuntu-c (ansible client)`
+- on the `target hosts or remote server (ubuntu1)` onn the `~/.ssh` folder we have the `authorized_keys` file that `allowing us to add` the `public key of our trusted host which is the ubuntu-c (ansible client)`
 
 - with the `secure ssh channel established` , when `authenticating` the `private key of the ubuntu-c (ansible client / ansible host file )` will be used to vertify with the `public key of the authorized key` file of `target host`
 
 - we can see the `public key file` the `<user>@<host>` been added at the end of the `file content`
 
-- we can copy the `public key file content` to the `autorized key of the remote server or trusted hosts`
+- we can `copy` the `public key file content` to the `autorized key of the remote server or trusted hosts`
 
 - but if we want to `copy manually` then we nee to make sure the `permission on the .ssh folder and the authorized_key file are correct` , otherwise the `ssh` will reject it 
+
+- the `permission` will be `700` for the `.ssh folder` of the `target host` and `permission` will be off `600` for the `authorized_keys` files which present in `.ssh` folder  
 
 - there is a `more efficient` way to do it using the command as `ssh-copy-id` which is a `tool bundled with ssh command`
 
 - if we want to copy the `public key of the ansible client system` then we can use the command as `ssh-copy-id <username>@<remote server name>` , it will prompt for the `password` which will be `ansible trusted host password` then it will copy the `public key of the ubuntu-c(client) to the trusted host ubuntu server(ubuntu1)`
 
-- now when we try to ssh to the `remote server` the `private key of the ansible host client` will be validated against the `trusted host authorized key public keypair` once validated then we can see the result in here 
+- now when we try to ssh to the `remote server` the `private key of the ansible host client` will be `validated` against the `trusted host authorized key public keypair` once validated then we can see the result in here 
 
 - from the `next time onwards ` we don't need the `password` to access the `trusted host/ remote server`
 
 - if we have the `fingerprint already setup between the cleint and server (now  the server know the client)` then we don't have to provide the `fingerprint permission` while using the `ssh-copy-id <username>@<host name>` but in case if we are trying to connect to the `trusted host/remote server` where the `fingerprint validation not happened (server don't know about the client)` then we can in that case the `fingerprint validation` also going to happen and `followed by password authenticatrion` then the `public key will be copied to the autorized_key of the remote server` when we are using the `ssh-copy-id <username>@<hostname>` command 
+
+# <ins> connecting Multiple Target Host from Ansible Host </ins> #
 
 - we need to copy our `public key` of the `ansible host` to the `set of target host` if we want to connect 
 
@@ -108,7 +115,30 @@
 
 - we will use the `sshpass` which will help in putting the `password` again and again for each new `target host / remote server`
 
+- else we can use the `password.txt` file which contains the `password` in  order to `connect to multiple host` in this case
 
 # <ins> How to connect the Ansible Host to Set of Target Host using the Public and Private Keys automatically using sshpass program </ins> #
 
-- 
+- we can use the `custom script` for this purpose as below 
+
+  ```
+    # we can save the password to the password.txt file which we can later used for sshpass referece
+
+    - echo password > password.txt # here we are writing the password to password.txt file
+
+    # we can write down the below for loop in order to get the ansible host psswordless communication to target host
+
+    for user in ansible root # as we are trying to login as both ansible and root user 
+      do
+        for os in ubuntu centos # here the operating system being ubuntu and centos 
+        do 
+          for instance in 1 2 3 # as we have 3 instances for each of the OS file 
+          do 
+            sshpass -f password.txt ssh-copy-id -o StrictHostKeyChecking=no ${user}@${os}${instance}
+            # here the sshpss command will use the password.txt file against the command which been prefixed into it 
+            # also we have the StrictHostKeyChecking which will help not prompting the fingerprint option for the first time 
+          done
+        done
+      done
+  
+  ```
