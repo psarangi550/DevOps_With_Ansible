@@ -113,6 +113,8 @@
 
 - we can do that manually `by using the ssh-copy-id` and taking the `fingerprint and password for each new target host` or we can automate it 
 
+- we can install the `sshpass` using the command as `sudo apt update && sudo apt install sshpass` where `sudo means superuserdo`
+
 - we will use the `sshpass` which will help in putting the `password` again and again for each new `target host / remote server`
 
 - else we can use the `password.txt` file which contains the `password` in  order to `connect to multiple host` in this case
@@ -123,22 +125,54 @@
 
   ```
     # we can save the password to the password.txt file which we can later used for sshpass referece
-
     - echo password > password.txt # here we are writing the password to password.txt file
 
     # we can write down the below for loop in order to get the ansible host psswordless communication to target host
-
-    for user in ansible root # as we are trying to login as both ansible and root user 
+    for user in ansible root # as we are trying to login as both ansible and root user as 2 user
       do
-        for os in ubuntu centos # here the operating system being ubuntu and centos 
+        for os in ubuntu centos # here the operating system being ubuntu and centos 2 operating system
         do 
           for instance in 1 2 3 # as we have 3 instances for each of the OS file 
           do 
             sshpass -f password.txt ssh-copy-id -o StrictHostKeyChecking=no ${user}@${os}${instance}
-            # here the sshpss command will use the password.txt file against the command which been prefixed into it 
-            # also we have the StrictHostKeyChecking which will help not prompting the fingerprint option for the first time 
+            # here the sshpss command will use the password.txt file against the command which been prefixed into it which we want as the target command
+            # sshpass uses the prefixed ssh command that we want to target
+            # also we have the StrictHostKeyChecking which will help in automatically accept the fingerprint
+            # this is a `ssh option which can be utilized with ssh-copy-id`
           done
         done
       done
   
+  ```
+
+# <ins> Quick Ansible to check for the connectivity </ins> #
+
+- we can test an quick check to see whether the `ansible` able to connect to all the `target host` without a `password or not` with `both ansible or root user`
+- here we will be using the `ansible executabnle which is a ansible command line` which can t`est the configuration that we build`
+
+- where the `-i` option can be used the `ansible command or ansible executable` with this `-i` option we can define the `inventory file that we have`
+
+- the `-i` option stands for the `inventory option`
+
+- but we can also use a `comma i.e ,` with the `-i` option  `we can directly mention the inventory(target host) as a part of the command line using this , with -i option`
+
+- the `all` which is used to specify the `" group of target hosts" that we want to target`
+
+- by default in ansible `any target host` always added automatically to the `all target host group`
+
+- this `all taget group` is the convient way to linking `all the host(inventory) we specified with -i option  with all the target host group`
+
+- the `-m` specify the `ansible module` and here we are using the `module called ping`
+
+- the `ping module` try to connect to the `target host` and will return the `pong` in case of `successful attempt`
+
+- the command can be written as below 
+
+  ```
+      ansible -i,ubuntu1,ubuntu2,ubuntu3,centos1,centos2,centos3 all -m ping 
+      # here -i is the incentory which can specify inventory file and also with comma we can specify the inventory( target host) directly on command line 
+      # all is the target group which by default add any host into it 
+      # the `-m` option used for module that we want to use here we are using the `ping module`
+      # the ping module will return pong in response on successful connection 
+      
   ```
