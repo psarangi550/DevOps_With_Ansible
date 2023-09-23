@@ -832,9 +832,10 @@
                         path: /etc/hosts.allow
                         line: "sshd: {{ansible_hostname}}.diveinto.io"
                         state: absent #mentioning the state as absent which is remove the entry if the line found
+                      delegate_to: ubuntu3
 
                 # here we will be executing aginst the ubuntu3 host as we don't need any other info from any other hosts
-                - hosts: ubuntu-c,centos1,ubuntu1 # targeting the ubuntu-c,centos1,ubuntu1 as we ned to gather the ansible_facts
+                - hosts: ubuntu3 # targeting the ubuntu-c,centos1,ubuntu1 as we ned to gather the ansible_facts
                   tasks:  
                     - name: definingthe task to use the lineinfile module to remove the line from the /etc/hosts.allow file 
                       lineinfile:  # using the lineinfile module
