@@ -81,7 +81,7 @@
 
 # <ins> How to connect the Ansible Host to Target Host using the Public and Private Keys </ins> #
 
-- on the `ansible control host i.e. (ubuntu-c)` in this case we will create `2 keys` named as `public and private key which will comprise to a key-pair`
+- on the `ansible control host i.e. (ubkuntu-c)` in this case we will create `2 keys` named as `public and private key which will comprise to a key-pair`
 
 - on the `target hosts or remote server (ubuntu1)` onn the `~/.ssh` folder we have the `authorized_keys` file that `allowing us to add` the `public key of our trusted host which is the ubuntu-c (ansible client)`
 
@@ -174,5 +174,5 @@
       # all is the target group which by default add any host into it 
       # the `-m` option used for module that we want to use here we are using the `ping module`
       # the ping module will return pong in response on successful connection 
-      
+
   ```
