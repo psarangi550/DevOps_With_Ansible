@@ -2,9 +2,9 @@
 
 - `blocks are the feeature that been added to ansible 2`
 
-- `block` allow us to `group` `number of tasks` into `blocks` 
+- `block` allow us to `group` `a number of tasks` into `blocks` 
 
-- they also provide `other benifits such as error handling`
+- they also provide `other benifits` ` such as error handling`
 
 - **Case01**
   
@@ -285,9 +285,11 @@
     
     - if we are using the `block` like the same as the `tasks` until now
     
-    - the `benifit` of using the `block` will be we can use the `error handling along with it` like how we do for python using the `try/except/finally`
+    - the `benifit` of using the `block` will be we can use the `error handling along with it` like how we do for python using the `try/except/finally` in the `ansible playbook`
     
-    - we can define a `resuse` block where we can defne the `except block code` 
+    - we can define a `rescue` block where we can defne the `except block code` 
+    
+    - if a `block task` got failed then only the `rescue` block going to be `get running`
     
     - we can define the `always` to define the `executed no matter what like the finally clause`
     

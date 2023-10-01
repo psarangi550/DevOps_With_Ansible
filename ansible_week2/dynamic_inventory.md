@@ -19,7 +19,7 @@
 
 - we can also use the `-i` option define the `inventory files` while using the `adsible adhoc command`
 
-- if that `inventory file` is `executable script(shell script/python script)` ansible will use that as the `Dynamic Inventory`
+- if that `inventory file` is `executable script(shell script/python script)` `ansible` will `use that as` the `Dynamic Inventory`
 
 -  if that `inventory file` is `executable script(shell script/python script)` ansible will `execute the file` and use the `return content of the executable script` as the `inventory`
 
@@ -38,7 +38,7 @@
 
 - `return` a `JSON encoded` `dictionary of inventory content` when used wit the `--list` option
 
-- return a `JSON encoded` `dictionary structure` for the `--host <hostaname>` option 
+- `return` a `JSON encoded` `dictionary structure` for the `--host <hostaname>` option 
 
 # <ins> Writing the Dynamic Inventory Script </ins> #
 
@@ -48,7 +48,7 @@
 
 - here the `dynamic inventory which is the python script here` will `recreate` the `inventory` that we are `preveiously using`
 
-- we can define the `example temolate of python executable script as below `
+- we can define the `example template of python executable script as below `
 
     ```
         inventory.py
@@ -208,11 +208,11 @@
 
     ```
 
-- the `dynamic inventory script` here `invcentory.py` will going to `dynamically recreate the inventory` which we are `using preveiously`
+- the `dynamic inventory script` here `inventory.py` will going to `dynamically recreate the inventory` which we are `using preveiously`
 
 - if we are running without the option as `--list or --host <hostname>` we will get the `usage message in return`
 
-- but we run that with the `--list` option and the `include_list_hostvars` been set to `False` in  that case we will be getting the `groups containsing the list of host as the JSON encrypted dictionary`
+- but we run that with the `--list` option and the `include_list_hostvars` been set to `False` in  that case we will be getting the `groups containing the list of host as the JSON encrypted dictionary`
 
 - if we run the command as `./inventory.py --list` here using the `--list` option then it will output the `group of host as the JSON encrypted dictionary`
 
@@ -220,7 +220,7 @@
 
     ```
         # if we run the inventory.py python script then we will get the output 
-        ./inventory.py # here using the inventory.py file in here 
+        ./inventory.py --list # here using the inventory.py file in here 
 
         # the output will be in the form of JSON encoded dict of self.group
         # here we can see the target group and their corresponding host and also the groupvars
@@ -267,7 +267,7 @@
 
 - if we have the `hostvars` for the `particular host` then we can provide the `host against the --host option` with the `hostnme` as `host <hostname>`
 
-- if the `hostvars` for the `p[rticular host exist` then we can see the `corresponding hostvars` else we will be getting the `{} i.e empty dict` as the `response`
+- if the `hostvars` for the `particular host exist` then we can see the `corresponding hostvars` else we will be getting the `{} i.e empty dict` as the `response`
 
 - for eample we know we have the `hostvars` of `centos1 target host` as `ansible_port` we can see the `infopp as below`
 
@@ -289,7 +289,7 @@
 
     ```
 
-- as long as the `executable script or dynamic inventory` as long as it accept the  `command line input with --list and --host <hostname>` then  return the `JSON encrypted inventory content or JSON encrypted data structure respectively` as the outcome then we can use that as the `dynamic inventory` with `anible`
+- as long as the `executable script or dynamic inventory` as long as it accept the  `command line input with --list and --host <hostname>` then  `return` the `JSON encrypted inventory content or JSON encrypted data structure respectively` as the outcome then we can use that as the `dynamic inventory` with `ansible`
 
 - we can specify the `-i option` and `inventory file` with the `ansible adhoc command` then we can use the `dynamic inventory` as below from the `ansible front`
 
@@ -333,7 +333,7 @@
     
     ```
 
-- we can `temporayly` siable the `logging` by commenting `over it and use it while debugging`
+- we can `temporayly` disable the `logging` by commenting `over it and use it while debugging`
 
 - the `action=strore_true` will store `True/False` based on the `--list option been provided or not`
 
@@ -348,6 +348,9 @@
 - we can't write the `logging message to the stdout` as the `stdout display the JSON which the ansible uses` and the `StyreamHandler can distort that the code will not run` , hence we are outputing to a `logger file`
 
 - if we are  looking into the  `logging file` which been managed by the `FileHandler` then we can see that 
+
+
+
 
 - even though we are using the `--list` option for `each of the host in the inventory.py` the `every host has been checked for the hostvars`
 
@@ -374,7 +377,7 @@
 
 - we can see the `even though we just provided the --list option` for `each of the host present in th inventory.py file hostvars host() will get executed` which takes `significant time`
 
-- when we use the `--list` option then `ansible called dynamic inventory --list` which provide the `list of host` option then for each of the `target host in the inventory file` it ran the `--host` with `each of the hostname that we get fromthe inventor.py file`
+- when we use the `--list` option then `ansible called dynamic inventory --list` which provide the `list of host` option then for each of the `target host in the inventory file` it ran the `--host` with `each of the hostname that we get from the inventor.py file`
 
 - hence lets suppose we have `1000 of target host` then `each will go through the hostvars` check and time will be high 
 
@@ -566,13 +569,13 @@
 
 - if `we want to provide thousand of host` ansible need to `mitigate this problem`
 
-- in `Ansible 1.3` we are not adding the `hostvars info for each host that we get bck from --list option` rather we are `using the _meta key with the hostvars info embeded into the group of host itsef so that each host will not called with the hostvars`
+- in `Ansible 1.3` we are not adding the `hostvars info for each host that we get back from --list option` `rather` we are `using the _meta key with the hostvars info embeded into the group of host itsef so that each host will not called with the hostvars`
 
 - hence we will be getting the `Ansible 1.3` we can set the `include_list_hostvars=True` then which will add the `_meta` key to the `group of host with hostvars` as the value 
 
 - if we are using the `Ansible < 1.3` we need to referene tht with the `--list and --host option`
 
-- we can execute the `if the group of host mmcontains the _meta key` then for every host `checking the hostvars` will not be performed 
+- we can execute the `if the group of host contains the _meta key` then for every host `checking the hostvars` `will not be performed` 
 
 - hene when we use the `include_list_hostvars=True` which make the `_meta info` and `hostvars is the part of it` and hence ansible will not prform the `every host hostvar checking` which can imporve the `time sifgnifantly`
 
